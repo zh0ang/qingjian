@@ -178,4 +178,3 @@ apps/windows/installer/build.ps1
 - 反馈问题或建议请到 [Issues](https://github.com/zh0ang/qingjian/issues)；
 - 想了解命令模式实现：命令模块见 `crates/qingjian-core/src/command/`，命令库见 `assets/commands/`；
 - 上游使用文档：[qingjian.app/docs](https://qingjian.app/docs)。
-*（内容由AI生成，仅供参考）*
