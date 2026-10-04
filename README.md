@@ -2,54 +2,75 @@
   <img src="assets/icon/qingjian-mark.svg" alt="青简竹简图标" height="108">
 </p>
 
-<h1 align="center">青简 Qingjian</h1>
+<h1 align="center">青简 Qingjian · 命令模式版</h1>
 
-<p align="center"><strong>好好输入，顺便多认识一个词。</strong></p>
+<p align="center"><strong>好好输入，顺便多认识一个词；输入命令，顺手把命令补全。</strong></p>
 
 <p align="center">
-  <a href="https://qingjian.app/download"><img src="https://img.shields.io/github/v/release/qingjian-team/qingjian?label=stable" alt="stable release"></a>
-  <a href="https://github.com/qingjian-team/qingjian/stargazers"><img src="https://img.shields.io/github/stars/qingjian-team/qingjian?style=flat&amp;label=Stars" alt="GitHub Stars"></a>
+  <a href="https://github.com/qingjian-team/qingjian"><img src="https://img.shields.io/badge/fork%20of-qingjian--team%2Fqingjian-blue" alt="fork of qingjian-team/qingjian"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0--or--later-blue" alt="License: GPL-3.0-or-later"></a>
-  <a href="https://qingjian.app/docs/getting-started/install"><img src="https://img.shields.io/badge/macOS-13%2B-blue" alt="macOS 13+"></a>
-  <a href="https://qingjian.app/docs/getting-started/install"><img src="https://img.shields.io/badge/Windows-10%2F11-blue" alt="Windows 10/11"></a>
-  <a href="https://qingjian.app/docs/getting-started/linux"><img src="https://img.shields.io/badge/Linux-Fcitx5%20manual-lightgrey" alt="Linux Fcitx5，手动启动"></a>
+  <a href="https://img.shields.io/badge/macOS-13%2B-blue"><img src="https://img.shields.io/badge/macOS-13%2B-blue" alt="macOS 13+"></a>
+  <a href="https://img.shields.io/badge/Windows-10%2F11-blue"><img src="https://img.shields.io/badge/Windows-10%2F11-blue" alt="Windows 10/11"></a>
+  <a href="https://img.shields.io/badge/Linux-Fcitx5-lightgrey"><img src="https://img.shields.io/badge/Linux-Fcitx5-lightgrey" alt="Linux Fcitx5"></a>
 </p>
 
-青简是一款输入法。你可以像平常一样打字：输入拼音、选择候选、写完整句；候选旁的一条译词，让语言学习自然发生在日常输入里。译词始终只是辅助信息，不会盖过你要输入的文字。
+## 这个项目是什么
 
-https://github.com/user-attachments/assets/d145fde9-a641-4543-8b15-dd7a2685de3d
+青简是一款开源输入法：像平常一样输入拼音、选择候选、写完整句，候选旁的译词让语言学习自然发生在日常输入里。
 
-视频演示了青简在 macOS 上的整句输入、候选重排和候选译词。
+**本仓库是青简的派生修改版（fork）**，在保留上游完整输入能力的基础上，新增了面向开发与刷机场景的「命令模式」：输入 `fas` 就能直接补全出 `fastboot reboot` 这样的完整命令行。核心修改集中在 `crates/qingjian-core` 的命令模块与随包命令库，其余输入能力与上游保持一致，上游迭代可持续合入。
 
-## 下载与开始使用
+## 核心优势：命令模式，输入法里直接补齐命令行
 
-- **macOS、Windows**：[下载青简](https://qingjian.app/download)；安装步骤见[使用文档](https://qingjian.app/docs/getting-started/install)。
-- **Linux**：已有 Fcitx5 版本，使用系统默认候选面板；目前需要手动启动后台服务，详见 [Linux 安装说明](https://qingjian.app/docs/getting-started/linux)。
-
-macOS 与 Windows 版本仍处于测试阶段。安装后先选中青简，在「偏好设置 / 设置 → 通用」选择想学习的语言，就可以开始输入。第一次使用可从[第一次输入](https://qingjian.app/docs/getting-started/first-input)读起。
-
-## 输入时，你会看到什么
+平时敲命令要么翻笔记、要么先打一半再 Tab，本版青简把命令补全直接搬进了输入法候选区：
 
 ```text
-1  开发        development
-2  编程        programming
-3  架构        architecture
+fas
+1  fastboot devices             列出连接的 fastboot 设备
+2  fastboot reboot              重启设备到系统
+3  fastboot flash boot <img>    刷入 boot 分区镜像
+4  fastboot oem unlock          解锁 bootloader
 ```
 
-候选旁一次只显示一种学习语言的译词。目前可以选择英语、日语或西班牙语，也可以关闭译词显示。青简还支持整句输入、简拼、拼写纠错、双拼、五笔等输入方式；本地整句模型会在停顿后调整句子候选。
+- **自动识别**：默认 Auto 模式，输入纯命令字符且前缀命中命令库即自动出命令候选，命令候选永远排在候选区最前；
+- **不影响正常输入**：中文拼音里混入的字母串若前缀未命中命令库，自动回落为普通拼音候选，输入毫无感知；
+- **支持多段前缀**：可输入 `fastboot flash`、`adb shell` 这类带空格的多段前缀继续收窄候选；
+- **候选带说明**：每条命令候选旁直接显示用途（如“刷入 boot 分区镜像”），不用猜这条命令是干嘛的；
+- **快捷键切换**：Auto（自动）→ Manual（强制命令模式）→ Off（关闭）循环切换，按需控制是否出命令候选。
 
-「统计」页还会显示今天、最近 7 天和累计的输入量，以及学习语言的词汇记录。详细用法见[输入功能](https://qingjian.app/docs/input)、[译词与生词](https://qingjian.app/docs/learning/translation)、[本地统计](https://qingjian.app/docs/learning/statistics)和[按键与快捷键](https://qingjian.app/docs/getting-started/keys)。
+### 内置命令库：15 类 387 条，纯文本可扩展
 
-## 数据与隐私
+| 分类 | 覆盖内容 |
+| --- | --- |
+| fastboot | devices / reboot / reboot-bootloader / flash boot / flash recovery / flash vbmeta / oem unlock 等 |
+| adb | shell / push / pull / logcat / reverse / install / devices 等 |
+| edl | 9008 深度刷机：解锁 bootloader、擦除/读写分区、打 GPT 表、执行刷机 XML 脚本等 |
+| ssh | 连接、端口转发、免密登录等 |
+| git | 常用 git 命令 |
+| linux / macos / windows / terminal | 各系统常用终端命令 |
+| network / disk / dev / compress / ops | 网络、磁盘、设备、压缩、运维场景命令 |
+| custom | 用户自定义命令库 |
 
-拼音转换、词库查询、本地模型和输入习惯学习在你的设备上完成。输入量与词汇统计也只保存在本机，不会上传；青简不需要账号。输入日志与统计分开保存，日志可在设置中关闭或清空，不影响统计。检查更新会向官网请求版本列表，可在设置中关闭。
+命令库是**纯文本、可扩展**的：位于 `assets/commands/*.tsv`，每行一条，格式为「命令\t分类\t说明」，加一行就是一条新命令，重新打包即可生效。`custom.tsv` 专为存放你自己的高频命令。
 
-可选的**云联想默认关闭**。开启后，青简会把当前输入和附近的文字直接发送给你自行填写的 AI 服务商，以获取候选或整句补全；请求不经过青简的服务器。发送范围与本机保存的数据，见[数据与日志](https://qingjian.app/docs/help/data-and-logs)。
+## 与上游的关系
 
-## 文档、反馈与参与开发
+- 本仓库由 [qingjian-team/qingjian](https://github.com/qingjian-team/qingjian) 派生修改而来；
+- 命令模式为本仓库**新增功能**，上游不包含；拼音输入、整句输入、候选译词、本地统计等其余能力与上游保持一致；
+- 代码沿用上游的 [GPL-3.0-or-later](LICENSE) 许可，保留上游版权与许可声明，并按许可要求公开全部源码。
 
-- [使用文档](https://qingjian.app/docs)：安装、设置、输入、卸载与常见问题。
-- [反馈问题或建议](https://github.com/qingjian-team/qingjian/issues/new/choose)；也可以加入 [QQ 内测交流群](https://qm.qq.com/q/jBvn2gGTxm)。
-- 想参与开发？从[开发文档](docs/)和[开发约定](docs/contributing.md)开始。
+## 下载与使用
 
-青简在[官方渠道](https://qingjian.app/download)免费提供。代码采用 [GPL-3.0-or-later](LICENSE) 许可；项目名称与 logo 不包含在代码授权中。随包数据有各自的来源与许可，见[数据来源清单](docs/design/landscape.md)。
+- **macOS / Windows**：安装后选中青简，在「设置 → 通用」选择想学习的语言即可开始输入；
+- **Linux**：Fcitx5 版本，需手动启动后台服务（详见[上游安装说明](https://qingjian.app/docs/getting-started/linux)）；
+- **命令模式开箱即用**：默认 Auto 模式，直接输入 `fas`、`adb`、`edl`、`ssh` 等前缀即可体验；想关掉或强制开启，用快捷键在 Auto / Manual / Off 间切换。
+
+## 隐私与数据
+
+拼音转换、词库查询、本地模型与输入统计全部在设备本地完成，不需要账号，不上传；可选云联想默认关闭，开启后数据直连你自行填写的 AI 服务商，不经过任何中转服务器。
+
+## 反馈与参与
+
+- 反馈问题或建议请到 [Issues](https://github.com/zh0ang/qingjian/issues)；
+- 想了解命令模式实现：命令模块见 `crates/qingjian-core/src/command/`，命令库见 `assets/commands/`；
+- 上游使用文档：[qingjian.app/docs](https://qingjian.app/docs)。
