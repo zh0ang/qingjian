@@ -30,4 +30,8 @@ pub enum CandidateKind {
     /// 模型直接按按键生成的整句（`yongdockerbushuhenfangbian` → 用docker部署很方便）：
     /// 词图读不通整段输入时的兜底来源，没有音节对齐，上屏吃掉整段作用域、不记学习。
     Generated,
+
+    /// 命令补全（`fastboot reboot`、`adb shell`、`ls -al` 等）：输入前缀命中命令库时给出，
+    /// 上屏吃掉整段作用域、不记学习、不记输入日志。
+    Command,
 }

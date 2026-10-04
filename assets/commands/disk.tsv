@@ -1,0 +1,20 @@
+dd if=<img> of=<dev> bs=4M	disk	写入镜像到设备
+dd if=/dev/zero of=<file> bs=1M count=100	disk	生成指定大小文件
+mount <dev> <dir>	disk	挂载设备
+mount -o remount,rw <dev>	disk	重新以读写方式挂载
+umount <dir>	disk	卸载挂载点
+fdisk -l	disk	列出磁盘分区表
+fdisk <dev>	disk	进入磁盘分区交互工具
+lsblk	disk	列出块设备树
+lsblk -f	disk	列出块设备文件系统
+blkid	disk	查看设备 UUID 与文件系统
+mkfs.ext4 <dev>	disk	格式化为 ext4
+mkfs.vfat <dev>	disk	格式化为 FAT32
+mkfs.xfs <dev>	disk	格式化为 xfs
+parted <dev> print	disk	打印分区表
+parted <dev> mklabel gpt	disk	创建 GPT 分区表
+parted <dev> mkpart primary 1MiB 100%	disk	创建主分区
+sgdisk -p <dev>	disk	打印 GPT 分区表
+sgdisk -n 1:0:+1G <dev>	disk	创建 1G 分区
+df -h	disk	查看磁盘空间（易读）
+du -sh <dir>	disk	统计目录占用

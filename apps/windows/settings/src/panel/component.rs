@@ -1,15 +1,15 @@
 //! 根组件的 Reactor 生命周期：建状态、按消息落盘、画左侧导航 + 当前页。
 
 use qingjian_platform::{
-    CandidateRenderer, Config, DEFAULT_ENGLISH_CANDIDATES_OFF_WINDOWS, LayoutMode, LogLevel,
-    PreeditMode, ShiftLetter, ThemeMode, UpdateChannel,
+    CandidateRenderer, CommandModeSetting, Config, DEFAULT_ENGLISH_CANDIDATES_OFF_WINDOWS,
+    LayoutMode, LogLevel, PreeditMode, ShiftLetter, ThemeMode, UpdateChannel,
 };
 use windows_reactor::*;
 
 use super::cloud_status::CloudStatus;
 use super::controls::{export_logs, log_dir, open_in_editor, open_with_explorer};
 use super::notice::Notice;
-use super::pages::{about, aux_code, cloud, dictionaries, general, shortcut};
+use super::pages::{about, aux_code, cloud, command, dictionaries, general, shortcut};
 use super::recorder::Recorder;
 use super::{Message, Settings};
 
@@ -245,6 +245,30 @@ impl Component for Settings {
                 self.reload();
             }
 
+            // 命令页
+            Message::CommandEnabled(on) => self.save("command", "enabled", on),
+            Message::CommandMode(Some(i)) if i < CommandModeSetting::ALL.len() => {
+                self.save("command", "mode", CommandModeSetting::ALL[i].key());
+            }
+            Message::ToggleCommandCategory(name, on) => {
+                // 分类缺省启用，`disabled_categories` 列的是关掉的。
+                let mut disabled = self.config.command.disabled_categories.clone();
+                if on {
+                    disabled.retain(|d| d != &name);
+                } else if !disabled.contains(&name) {
+                    disabled.push(name);
+                }
+                self.save_array("command", "disabled_categories", &disabled);
+            }
+            Message::RemoveCommandFile(name) => {
+                command::remove_file(self, &name);
+                self.reload();
+            }
+            Message::ImportCommand => {
+                command::import(self);
+                self.reload();
+            }
+
             // 高级页
             Message::VerboseLog(on) => {
                 let level = if on { LogLevel::Debug } else { LogLevel::Info };
@@ -340,6 +364,7 @@ impl Component for Settings {
             item("fuzzy", "模糊音", Symbol::Audio),
             item("dictionaries", "词库", Symbol::Library),
             item("aux_code", "辅码", Symbol::Character),
+            item("command", "命令", Symbol::Switch),
             item("usage", "统计", Symbol::List),
             item("advanced", "高级", Symbol::Repair),
             item("about", "关于", Symbol::Help),

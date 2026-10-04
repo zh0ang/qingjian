@@ -18,6 +18,9 @@ pub struct Row {
 
     /// 来自云联想：词前画一个小云朵，与本地候选区分。
     pub cloud: bool,
+
+    /// 命令候选：词前画 `>_` 标记，与普通候选区分。
+    pub command: bool,
 }
 
 impl Row {
@@ -29,6 +32,7 @@ impl Row {
             code: None,
             annotation: Vec::new(),
             cloud: false,
+            command: false,
         }
     }
 }

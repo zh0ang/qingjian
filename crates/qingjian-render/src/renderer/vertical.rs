@@ -37,6 +37,9 @@ impl Renderer {
             if row.cloud {
                 text.width += m.cloud_width();
             }
+            if row.command {
+                text.width += self.command_width(m);
+            }
             text.width += self.code_width(row, m);
             let annotation: f32 = row
                 .annotation

@@ -121,6 +121,7 @@ impl Router {
         let last_mtime = mtime(&config_path);
         let code_files = dirs.code_snapshot();
         let dictionary_files = dirs.dict_snapshot();
+        let command_files = dirs.command_snapshot();
         let updates = dirs.user_root.as_deref().map(|dir| {
             qingjian_update::Checker::new(dir.join(UPDATE_STATE_FILE), env!("CARGO_PKG_VERSION"))
         });
@@ -134,7 +135,9 @@ impl Router {
             applied_predict: config.predict.clone(),
             applied_dictionaries: config.dictionaries.clone(),
             applied_aux_code: config.aux_code.clone(),
+            applied_command: config.command.clone(),
             dictionary_files,
+            command_files,
             applied_language: assembly::learning_language(config),
             update: config.update.clone(),
             updates,
@@ -175,9 +178,19 @@ impl Router {
             reload.code_files = current;
             changed
         };
+        // 用户 `commands/` 下的文件增删或更新（设置页刚导入 / 移除一份命令库）：同理
+        let commands_changed = {
+            let current = reload.dirs.command_snapshot();
+            let changed = current != reload.command_files;
+            reload.command_files = current;
+            changed
+        };
         let path = reload.config_path.clone();
         if codes_changed {
             self.reload_aux_codes();
+        }
+        if commands_changed {
+            self.reload_command_db();
         }
         if !config_changed {
             return;
@@ -219,33 +232,75 @@ impl Router {
         self.reconcile_status();
         self.apply_model_config(&config.model);
 
-        let Some(reload) = &mut self.reload else {
+        let mut need_reload_aux = false;
+        let mut need_reload_command = false;
+        if let Some(reload) = &mut self.reload {
+            reload.update = config.update.clone();
+            if config.predict != reload.applied_predict {
+                attach_cloud(&mut self.engine, &config.predict);
+                reload.applied_predict = config.predict.clone();
+            }
+            let language = assembly::learning_language(config);
+            if language != reload.applied_language
+                && swap_translator(
+                    &mut self.engine,
+                    language,
+                    &reload.root,
+                    reload.dirs.user_root.as_deref(),
+                )
+            {
+                reload.applied_language = language;
+            }
+            if config.dictionaries != reload.applied_dictionaries {
+                reload.applied_dictionaries = config.dictionaries.clone();
+                self.engine
+                    .set_extra_dictionaries(reload.load_dictionaries());
+            }
+            need_reload_aux = config.aux_code != reload.applied_aux_code;
+            if need_reload_aux {
+                reload.applied_aux_code = config.aux_code.clone();
+            }
+            need_reload_command = config.command != reload.applied_command;
+            if need_reload_command {
+                reload.applied_command = config.command.clone();
+            }
+        }
+        if need_reload_aux {
+            self.reload_aux_codes();
+        }
+        if need_reload_command {
+            self.reload_command_db();
+        }
+    }
+
+    /// 按当前配置重装命令库：`commands/` 目录变了或 `[command]` 变了都走这里。
+    fn reload_command_db(&mut self) {
+        let Some(reload) = &self.reload else {
             return;
         };
-        reload.update = config.update.clone();
-        if config.predict != reload.applied_predict {
-            attach_cloud(&mut self.engine, &config.predict);
-            reload.applied_predict = config.predict.clone();
+        let db = assembly::load_command_db(
+            reload.dirs.bundled_commands.as_deref(),
+            reload.dirs.user_commands.as_deref(),
+            &reload.applied_command,
+        );
+        match db {
+            Some(db) => {
+                self.engine.set_command_db(db);
+                let mode = if reload.applied_command.enabled {
+                    reload.applied_command.mode.mode()
+                } else {
+                    qingjian_core::command::CommandMode::Off
+                };
+                self.engine.set_command_mode(mode);
+                tracing::info!("命令库已热重装");
+            }
+            None => {
+                self.engine.set_command_mode(qingjian_core::command::CommandMode::Off);
+                tracing::info!("命令模式已关闭（未装配命令库）");
+            }
         }
-        let language = assembly::learning_language(config);
-        if language != reload.applied_language
-            && swap_translator(
-                &mut self.engine,
-                language,
-                &reload.root,
-                reload.dirs.user_root.as_deref(),
-            )
-        {
-            reload.applied_language = language;
-        }
-        if config.dictionaries != reload.applied_dictionaries {
-            reload.applied_dictionaries = config.dictionaries.clone();
-            self.engine
-                .set_extra_dictionaries(reload.load_dictionaries());
-        }
-        if config.aux_code != reload.applied_aux_code {
-            reload.applied_aux_code = config.aux_code.clone();
-            self.reload_aux_codes();
+        if let Some(reload) = &mut self.reload {
+            reload.command_files = reload.dirs.command_snapshot();
         }
     }
 

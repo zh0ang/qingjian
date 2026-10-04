@@ -1,0 +1,26 @@
+fastboot devices	fastboot	列出连接的 fastboot 设备
+fastboot reboot	fastboot	重启设备到系统
+fastboot reboot-bootloader	fastboot	重启设备到 bootloader
+fastboot flash boot <img>	fastboot	刷入 boot 分区镜像
+fastboot flash recovery <img>	fastboot	刷入 recovery 镜像
+fastboot flash system <img>	fastboot	刷入 system 分区镜像
+fastboot flash vendor <img>	fastboot	刷入 vendor 分区镜像
+fastboot flash bootloader <img>	fastboot	刷入 bootloader 镜像
+fastboot flash vbmeta <img>	fastboot	刷入 vbmeta 镜像
+fastboot erase boot	fastboot	擦除 boot 分区
+fastboot erase recovery	fastboot	擦除 recovery 分区
+fastboot erase userdata	fastboot	擦除 userdata 分区（清数据）
+fastboot getvar all	fastboot	查看设备全部变量
+fastboot getvar version	fastboot	查看 bootloader 版本
+fastboot getvar unlocked	fastboot	查看解锁状态
+fastboot oem unlock	fastboot	解锁 OEM（部分机型）
+fastboot oem lock	fastboot	重新上锁 OEM（部分机型）
+fastboot format userdata	fastboot	格式化 userdata 分区
+fastboot format cache	fastboot	格式化 cache 分区
+fastboot sideload <zip>	fastboot	侧载刷入 OTA 包
+fastboot flashall	fastboot	刷入同一目录下所有镜像
+fastboot update <zip>	fastboot	按 OTA 包刷入全部分区
+fastboot -w	fastboot	刷机时擦除用户数据
+fastboot set_active <slot>	fastboot	设置活动分区槽位（A/B 设备）
+fastboot oem reboot-recovery	fastboot	重启到 recovery（部分机型）
+fastboot reboot fastboot	fastboot	重启到 fastboot 模式（动态分区）

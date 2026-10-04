@@ -169,7 +169,8 @@ impl Engine {
             | CandidateKind::Shortcut
             | CandidateKind::Custom(_)
             | CandidateKind::Emoji
-            | CandidateKind::Generated => Forgotten::default(),
+            | CandidateKind::Generated
+            | CandidateKind::Command => Forgotten::default(),
         };
         if !forgotten.is_nothing() {
             self.forget_span_cache();

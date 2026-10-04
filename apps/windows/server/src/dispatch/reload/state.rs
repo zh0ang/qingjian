@@ -6,7 +6,8 @@ use std::time::{Instant, SystemTime};
 use qingjian_core::Language;
 use qingjian_dictionary::Dictionary;
 use qingjian_platform::{
-    AuxCodeConfig, DictionariesConfig, UpdateConfig, code_tables, extra_dictionaries,
+    AuxCodeConfig, CommandConfig, DictionariesConfig, UpdateConfig, code_tables,
+    extra_dictionaries,
 };
 use qingjian_predict::PredictConfig;
 
@@ -28,6 +29,12 @@ pub struct DataDirs {
 
     /// 用户导入码表目录（`<用户目录>/codes`）。
     pub user_codes: Option<PathBuf>,
+
+    /// 随包命令库目录（随包根 `assets/commands/`）。
+    pub bundled_commands: Option<PathBuf>,
+
+    /// 用户自定义命令目录（`<用户目录>/commands`）。
+    pub user_commands: Option<PathBuf>,
 }
 
 impl DataDirs {
@@ -46,6 +53,35 @@ impl DataDirs {
             .map(extra_dictionaries::snapshot)
             .unwrap_or_default()
     }
+
+    /// 用户 `commands/` 的同一份快照；没配目录为空。
+    pub(super) fn command_snapshot(&self) -> Vec<(PathBuf, Option<SystemTime>, u64)> {
+        self.user_commands
+            .as_deref()
+            .map(snapshot_dir)
+            .unwrap_or_default()
+    }
+}
+
+/// `commands/` 的逐文件快照（路径、mtime、长度）。
+fn snapshot_dir(dir: &std::path::Path) -> Vec<(PathBuf, Option<SystemTime>, u64)> {
+    let mut paths: Vec<_> = std::fs::read_dir(dir)
+        .map(|entries| {
+            entries
+                .filter_map(|entry| entry.ok().map(|d| d.path()))
+                .filter(|path| path.extension().and_then(|e| e.to_str()) == Some("tsv"))
+                .collect()
+        })
+        .unwrap_or_default();
+    paths.sort();
+    paths
+        .into_iter()
+        .map(|path| {
+            let modified = std::fs::metadata(&path).and_then(|meta| meta.modified()).ok();
+            let len = std::fs::metadata(&path).map(|meta| meta.len()).unwrap_or(0);
+            (path, modified, len)
+        })
+        .collect()
 }
 
 /// 热加载状态。
@@ -77,6 +113,12 @@ pub(crate) struct ConfigReload {
 
     /// 已应用的 `[aux_code]`。
     pub(super) applied_aux_code: AuxCodeConfig,
+
+    /// 已应用的 `[command]`。
+    pub(super) applied_command: CommandConfig,
+
+    /// 最近加载的用户命令文件快照（路径、修改时间、长度）。
+    pub(super) command_files: Vec<(PathBuf, Option<SystemTime>, u64)>,
 
     /// 已应用的学习语言（`None` 为关）。
     pub(super) applied_language: Option<Language>,

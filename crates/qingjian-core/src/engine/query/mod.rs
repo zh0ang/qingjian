@@ -49,6 +49,7 @@ impl Engine {
         // 辅码态只出命中码的词：自定义短语没有码，不出
         if self.aux_filter().is_none() {
             self.insert_custom_phrases(&mut query.candidates.items);
+            self.insert_command_candidates(&mut query.candidates.items);
         }
         // 给输入日志留个摘要：上屏时才知道选了什么，这里才知道看到了什么
         let pinyin = match &query.correction {
@@ -87,6 +88,33 @@ impl Engine {
         }
 
         Ok(query)
+    }
+
+    /// 命令候选：前缀命中命令库时插到候选列表最前（命令补全优先级最高）。
+    fn insert_command_candidates(&self, items: &mut Vec<Candidate>) {
+        let candidates = self.command_candidates();
+        if candidates.is_empty() {
+            return;
+        }
+        let mut all = candidates;
+        all.extend(std::mem::take(items));
+        *items = all;
+    }
+
+    /// 生成命令候选（模式关闭 / 未装配命令库 / 输入不像命令前缀时为空）。
+    fn command_candidates(&self) -> Vec<Candidate> {
+        use crate::command::{engine as command_engine, MAX_COMMAND_CANDIDATES};
+        if !self.command_mode.is_active() {
+            return Vec::new();
+        }
+        let Some(db) = &self.command_db else {
+            return Vec::new();
+        };
+        let scope = self.composition.scope();
+        if !command_engine::is_command_like(scope) {
+            return Vec::new();
+        }
+        command_engine::command_candidates(db, scope, MAX_COMMAND_CANDIDATES)
     }
 
     pub(super) fn query_inner(&self) -> Result<Query, ParseError> {

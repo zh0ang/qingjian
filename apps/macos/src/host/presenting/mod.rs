@@ -114,6 +114,7 @@ impl Host {
                 let mut row = Row::from_candidate(offset, candidate);
                 row.index = index;
                 row.cloud = candidate.kind == CandidateKind::Cloud;
+                row.command = candidate.kind == CandidateKind::Command;
                 row
             })
             .collect();

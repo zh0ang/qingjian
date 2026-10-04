@@ -365,6 +365,9 @@ impl CandidateView {
                 if row.cloud {
                     text.width += self.cloud_width();
                 }
+                if row.command {
+                    text.width += self.command_width();
+                }
                 row_height = row_height.max(text.height + theme.row_padding * 2.0);
                 Item {
                     index_width: index.width,

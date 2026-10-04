@@ -5,6 +5,7 @@
 //! 判断标准：换掉 IMK 换成 TSF，不应该需要改这里的任何一行。
 
 pub mod candidate;
+pub mod command;
 pub mod composition;
 pub mod correction;
 pub mod custom_phrase;

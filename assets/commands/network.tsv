@@ -1,0 +1,18 @@
+curl <url>	network	请求 URL 输出内容
+curl -O <url>	network	下载文件并保留文件名
+curl -o <file> <url>	network	下载文件指定文件名
+curl -L <url>	network	跟随重定向
+curl -I <url>	network	只看响应头
+curl -X POST <url>	network	POST 请求
+wget <url>	network	下载文件
+wget -c <url>	network	断点续传下载
+wget -r <url>	network	递归下载整个站点
+ping <host>	network	测试网络连通性
+ping -c 4 <host>	network	发送 4 个 ICMP 包
+traceroute <host>	network	追踪路由路径
+nslookup <domain>	network	DNS 查询
+dig <domain>	network	DNS 详细查询
+dig +short <domain>	network	DNS 查询精简输出
+nc <host> <port>	network	Netcat 连接端口
+nc -l <port>	network	Netcat 监听端口
+nc -zv <host> <port>	network	扫描端口连通性

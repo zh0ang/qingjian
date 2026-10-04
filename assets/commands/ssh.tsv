@@ -1,0 +1,19 @@
+ssh <user>@<host>	ssh	SSH 远程登录
+ssh -p <port> <user>@<host>	ssh	指定端口 SSH 登录
+ssh -i <key> <user>@<host>	ssh	用密钥文件登录
+ssh-keygen -t ed25519	ssh	生成 ed25519 密钥对
+ssh-keygen -t rsa -b 4096	ssh	生成 4096 位 RSA 密钥对
+ssh-copy-id <user>@<host>	ssh	复制公钥到远程主机
+ssh-add ~/.ssh/id_ed25519	ssh	添加密钥到 ssh-agent
+ssh-agent	ssh	启动 ssh-agent
+scp <file> <user>@<host>:<path>	ssh	复制文件到远程
+scp -r <dir> <user>@<host>:<path>	ssh	递归复制目录到远程
+scp <user>@<host>:<path> <local>	ssh	从远程复制文件到本地
+sftp <user>@<host>	ssh	SFTP 交互式文件传输
+sftp get <remote>	ssh	SFTP 下载文件
+sftp put <local>	ssh	SFTP 上传文件
+rsync -av <src> <dst>	ssh	归档模式同步文件
+rsync -avz <src> <user>@<host>:<path>	ssh	压缩同步到远程
+rsync -av --delete <src> <dst>	ssh	镜像同步（删除多余文件）
+telnet <host> <port>	ssh	Telnet 连接
+mosh <user>@<host>	ssh	Mosh 移动终端连接

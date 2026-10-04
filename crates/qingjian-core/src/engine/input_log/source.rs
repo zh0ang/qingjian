@@ -49,6 +49,8 @@ impl From<CandidateKind> for InputSource {
             CandidateKind::Shortcut => Self::Shortcut,
             CandidateKind::Custom(_) => Self::Custom,
             CandidateKind::Emoji => Self::Emoji,
+            // 命令补全按用户敲的原文上屏，日志里按 Raw 记
+            CandidateKind::Command => Self::Raw,
         }
     }
 }

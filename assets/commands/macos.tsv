@@ -1,0 +1,15 @@
+open .	macos	在 Finder 中打开当前目录
+open <file>	macos	用默认程序打开文件
+open -a <app> <file>	macos	指定应用打开文件
+pbcopy	macos	复制标准输入到剪贴板
+pbpaste	macos	输出剪贴板内容
+brew install <pkg>	macos	Homebrew 安装包
+brew uninstall <pkg>	macos	Homebrew 卸载包
+brew search <keyword>	macos	Homebrew 搜索包
+brew update	macos	更新 Homebrew
+brew upgrade	macos	升级已装包
+brew services start <svc>	macos	启动服务
+defaults write com.apple.finder AppleShowAllFiles YES	macos	显示隐藏文件
+killall Finder	macos	重启 Finder
+sips -s format png <img> --out <out>.png	macos	转换图片格式
+screencapture -x <file>.png	macos	截屏

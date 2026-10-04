@@ -1,0 +1,17 @@
+zip -r <out>.zip <dir>	compress	递归压缩目录
+zip <out>.zip <file>	compress	压缩文件
+unzip <file>.zip	compress	解压到当前目录
+unzip -o <file>.zip	compress	解压并覆盖
+unzip -d <dir> <file>.zip	compress	解压到指定目录
+7z a <out>.7z <dir>	compress	创建 7z 压缩包
+7z x <file>.7z	compress	解压 7z 包
+xz <file>	compress	xz 压缩文件
+xz -d <file>.xz	compress	解压 xz 文件
+tar -zcvf <out>.tar.gz <dir>	compress	打包并 gzip 压缩
+tar -zxvf <file>.tar.gz	compress	解压 tar.gz
+tar -xvf <file>.tar	compress	解压 tar 包
+tar -zxvf <file>.tar.gz -C <dir>	compress	解压到指定目录
+gzip <file>	compress	gzip 压缩文件
+gunzip <file>.gz	compress	解压 gzip 文件
+tree	compress	以树状显示目录
+tree -L 2	compress	树状显示两层深度

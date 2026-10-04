@@ -166,13 +166,15 @@ impl CandidateView {
             .map(|(i, row)| {
                 let column = i % columns;
                 let cloud = if row.cloud { self.cloud_width() } else { 0.0 };
+                let command = if row.command { self.command_width() } else { 0.0 };
+                let extra = cloud + command;
                 let limit = fixed
                     .as_ref()
                     .map_or(em * MAX_CELL_EMS, |widths| widths[column]);
-                let (text, truncated) = self.truncate(&row.text, &theme.text_font, limit - cloud);
+                let (text, truncated) = self.truncate(&row.text, &theme.text_font, limit - extra);
                 let size = self.measure(&text, &theme.text_font);
                 if fixed.is_none() {
-                    text_widths[column] = text_widths[column].max(size.width + cloud);
+                    text_widths[column] = text_widths[column].max(size.width + extra);
                 }
                 row_height = row_height.max(size.height + theme.row_padding * 2.0);
                 (text, truncated)

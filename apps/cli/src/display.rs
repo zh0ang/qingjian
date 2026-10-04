@@ -234,6 +234,7 @@ fn format_candidate(candidate: &Candidate, width: usize) -> String {
         qingjian_core::CandidateKind::Sentence => "[句] ",
         qingjian_core::CandidateKind::Generated => "[生成] ",
         qingjian_core::CandidateKind::Emoji => "",
+        qingjian_core::CandidateKind::Command => "> ",
     };
     format!(
         "{}{padding}{marker}{reading}{aux}{annotation}",

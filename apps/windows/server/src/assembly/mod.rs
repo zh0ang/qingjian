@@ -6,10 +6,10 @@ mod spec;
 use std::path::{Path, PathBuf};
 use std::time::Instant;
 
-use qingjian_core::{EmojiTable, Engine, Language};
+use qingjian_core::{command::CommandDb, command::CommandMode, EmojiTable, Engine, Language};
 use qingjian_dictionary::{Dictionary, WordList};
 use qingjian_learning::{FrequencyLearner, InputLog, UsageStats, VocabularyBook};
-use qingjian_platform::{Config, code_tables, extra_dictionaries};
+use qingjian_platform::{code_tables, extra_dictionaries, CommandConfig, Config};
 use qingjian_translate::{Glossary, LayeredTranslator, LevelTable, PersonalGlossary};
 
 use crate::error::ServerError;
@@ -87,6 +87,20 @@ pub fn assemble(spec: &AssemblySpec) -> Result<Engine, ServerError> {
         );
         engine = engine.with_language_model(Box::new(model));
     }
+    if let Some(db) = load_command_db(
+        spec.bundled_commands_dir.as_deref(),
+        user_commands_dir(spec.user_dir.as_deref()).as_deref(),
+        &spec.command,
+    ) {
+        engine.set_command_db(db);
+    }
+    // 总开关关着时强制 Off，开着按配置的识别方式。
+    let mode = if spec.command.enabled {
+        spec.command.mode.mode()
+    } else {
+        CommandMode::Off
+    };
+    engine.set_command_mode(mode);
     Ok(engine)
 }
 
@@ -102,6 +116,71 @@ pub fn user_codes_dir(user_dir: Option<&Path>) -> Option<std::path::PathBuf> {
     let dir = user_dir?.join("codes");
     std::fs::create_dir_all(&dir).ok()?;
     Some(dir)
+}
+
+/// 用户自定义命令目录 `commands/`，不存在则创建；建不了当没有。
+pub fn user_commands_dir(user_dir: Option<&Path>) -> Option<std::path::PathBuf> {
+    let dir = user_dir?.join("commands");
+    std::fs::create_dir_all(&dir).ok()?;
+    Some(dir)
+}
+
+/// 命令库：随包 `assets/commands/` 打底，用户 `commands/` 下的 `.tsv` 追加；
+/// 再按 `[command] disabled_categories` 过滤。总开关关着或没有可用条目为 `None`。
+/// 启动与热加载共用；失败只记日志、不影响输入法主功能。
+pub(crate) fn load_command_db(
+    bundled: Option<&Path>,
+    user: Option<&Path>,
+    config: &CommandConfig,
+) -> Option<CommandDb> {
+    if !config.enabled {
+        return None;
+    }
+    let mut db = CommandDb::new();
+    let mut loaded = 0;
+    let mut failed = 0;
+    if let Some(dir) = bundled {
+        match db.load_dir(dir) {
+            Ok((count, errors)) => {
+                loaded += count;
+                failed += errors;
+            }
+            Err(error) => tracing::warn!(%error, "随包命令库加载失败"),
+        }
+    }
+    if let Some(dir) = user {
+        let mut paths: Vec<_> = std::fs::read_dir(dir)
+            .map(|entries| {
+                entries
+                    .filter_map(|entry| entry.ok().map(|d| d.path()))
+                    .filter(|path| path.extension().and_then(|e| e.to_str()) == Some("tsv"))
+                    .collect()
+            })
+            .unwrap_or_default();
+        paths.sort();
+        for path in paths {
+            let category = path
+                .file_stem()
+                .and_then(|s| s.to_str())
+                .unwrap_or("custom")
+                .to_string();
+            match db.load_file(&path, &category) {
+                Ok(count) => loaded += count,
+                Err(error) => {
+                    failed += 1;
+                    tracing::warn!(%error, path = %path.display(), "用户命令文件跳过");
+                }
+            }
+        }
+    }
+    if loaded == 0 && failed == 0 {
+        return None;
+    }
+    if let Some(enabled) = config.enabled_categories(db.categories()) {
+        db.set_enabled_categories(Some(enabled));
+    }
+    tracing::info!(loaded, failed, "命令库已加载");
+    Some(db)
 }
 
 /// 读不了就退回只在内存里学，不拿空表覆盖用户文件。

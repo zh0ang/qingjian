@@ -62,6 +62,7 @@ pub use vocabulary::{
 };
 
 use crate::candidate::{Candidate, CandidateKind, CandidateList, Language};
+use crate::command::{CommandDb, CommandMode};
 use crate::composition::Composition;
 use crate::correction::{self, Correction, TypoCosts, typo};
 use crate::emoji::EmojiTable;
@@ -287,6 +288,12 @@ pub struct Engine {
 
     /// 繁体输出时「繁体 → 原简体」的映射，组句结束清空；学习、译词、撤销都按简体原文走。
     traditional_map: std::cell::RefCell<HashMap<String, String>>,
+
+    /// 命令模式状态机（Auto / Manual / Off），缺省 Auto。
+    command_mode: crate::command::CommandMode,
+
+    /// 命令库，壳按用户目录 `commands/` 与 `assets/commands/` 装配；`None` 时不出命令候选。
+    command_db: Option<crate::command::CommandDb>,
 }
 
 /// 形码编码最长几位（五笔四码）：混输下超过它的输入只可能是拼音。
@@ -450,6 +457,8 @@ impl Engine {
             traditional: false,
             opencc: None,
             traditional_map: std::cell::RefCell::new(HashMap::new()),
+            command_mode: CommandMode::Auto,
+            command_db: None,
         }
     }
 }

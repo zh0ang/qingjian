@@ -1,0 +1,18 @@
+screen -S <name>	terminal	创建命名会话
+screen -r <name>	terminal	恢复会话
+screen -ls	terminal	列出会话
+screen -X -S <name> quit	terminal	关闭会话
+tmux new -s <name>	terminal	新建命名会话
+tmux attach -t <name>	terminal	附加到会话
+tmux ls	terminal	列出会话
+tmux detach	terminal	分离会话（Ctrl-b d）
+tmux kill-session -t <name>	terminal	销毁会话
+alias ll='ls -alF'	terminal	设置命令别名
+alias rm='rm -i'	terminal	设置 rm 别名
+export PATH=$PATH:<dir>	terminal	追加 PATH
+export LANG=en_US.UTF-8	terminal	设置语言环境
+source ~/.bashrc	terminal	重新加载 bash 配置
+source ~/.zshrc	terminal	重新加载 zsh 配置
+history	terminal	查看历史命令
+!!	terminal	执行上一条命令
+!<prefix>	terminal	执行最近匹配前缀的命令

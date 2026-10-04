@@ -5,6 +5,7 @@ pub(super) mod advanced;
 pub(super) mod aux_code;
 pub(super) mod candidates;
 pub(super) mod cloud;
+pub(super) mod command;
 pub(super) mod dictionaries;
 pub(super) mod fuzzy;
 pub(super) mod general;

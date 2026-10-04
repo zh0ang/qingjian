@@ -1,0 +1,33 @@
+docker ps	dev	列出运行中的容器
+docker ps -a	dev	列出全部容器
+docker images	dev	列出镜像
+docker build -t <name> .	dev	构建镜像
+docker run -it <img>	dev	交互式运行容器
+docker run -d -p <port>:<port> <img>	dev	后台运行并映射端口
+docker exec -it <id> bash	dev	进入容器
+docker compose up -d	dev	启动 compose 服务
+docker stop <id>	dev	停止容器
+make	dev	执行默认目标构建
+make clean	dev	清理构建产物
+make -j$(nproc)	dev	并行构建
+cmake -B build	dev	配置构建目录
+cmake --build build -j	dev	编译构建目录
+gcc -o <out> <file>.c	dev	编译 C 程序
+gcc -Wall -Wextra <file>.c -o <out>	dev	带警告编译 C 程序
+g++ -std=c++17 <file>.cpp -o <out>	dev	编译 C++17 程序
+python3 <file>.py	dev	运行 Python 脚本
+python3 -m venv venv	dev	创建虚拟环境
+pip install <pkg>	dev	安装 Python 包
+pip install -r requirements.txt	dev	按清单安装依赖
+pip list	dev	列出已安装包
+node <file>.js	dev	运行 Node.js 脚本
+npm install	dev	安装项目依赖
+npm install -g <pkg>	dev	全局安装包
+npm run <script>	dev	运行 npm 脚本
+cargo build	dev	构建 Rust 项目
+cargo build --release	dev	发布模式构建
+cargo run	dev	运行 Rust 项目
+cargo test	dev	运行 Rust 测试
+java -jar <file>.jar	dev	运行 JAR 包
+mvn clean package	dev	Maven 清理并打包
+mvn test	dev	运行 Maven 测试

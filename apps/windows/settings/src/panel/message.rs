@@ -90,6 +90,18 @@ pub(crate) enum Message {
     /// 打开文件选择器导入一张码表（Rime `.dict.yaml`）。
     ImportCodeTable,
 
+    // 命令页
+    /// 命令模式总开关（`[command] enabled`）。
+    CommandEnabled(bool),
+    /// 触发方式下拉（`[command] mode`，下标对应 `CommandModeSetting::ALL`）。
+    CommandMode(Option<usize>),
+    /// 命令分类开关（文件名，开 / 关），关掉的进 `[command] disabled_categories`。
+    ToggleCommandCategory(String, bool),
+    /// 挪进 commands\removed，不真删。
+    RemoveCommandFile(String),
+    /// 打开文件选择器导入一个命令库（三列 `.tsv`）。
+    ImportCommand,
+
     // 高级页
     VerboseLog(bool),
     InputLog(bool),

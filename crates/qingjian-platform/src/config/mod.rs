@@ -1,6 +1,7 @@
 mod apps;
 mod aux_code;
 mod candidate_renderer;
+mod command;
 mod dictionaries;
 mod general;
 mod key_combo;
@@ -32,6 +33,7 @@ pub use apps::{
 };
 pub use aux_code::AuxCodeConfig;
 pub use candidate_renderer::CandidateRenderer;
+pub use command::{CommandConfig, CommandModeSetting};
 pub use dictionaries::{DEFAULT_DOMAINS, DictionariesConfig};
 pub use general::{
     DEFAULT_PAGE_KEYS, GeneralConfig, LEARNING_LANGUAGE_OFF, MAX_PAGE_SIZE, PAGE_KEY_OPTIONS,
@@ -74,6 +76,9 @@ pub struct Config {
 
     /// 辅码码表开关。
     pub aux_code: AuxCodeConfig,
+
+    /// 命令模式开关（fastboot / adb / git 等命令补全）。
+    pub command: CommandConfig,
 
     /// 按应用改行为（哪些应用里英文模式不给候选）。
     pub apps: AppsConfig,
@@ -307,6 +312,16 @@ enabled = false
 # 辅码码表：放在配置同目录 codes/ 下的 .qj 文件都会加载，这里列出要关掉的（文件名，不含扩展名）
 # 随包的笔画表也可以在这里关掉；码表由「辅码」设置页导入，或放好文件后在这里管
 disabled = []
+
+[command]
+# 命令模式：敲命令前缀（如 fas）时候选区展示完整命令补全（fastboot reboot）
+# 总开关：false 时整条命令线关，候选不挂命令补全
+enabled = true
+# 识别方式：auto 自动识别（纯英文 / 命令字符且前缀命中命令库时出候选）/ manual 快捷键强制 / off 关闭
+mode = "auto"
+# 关掉的命令分类（文件名，不含扩展名）；随包的 assets/commands/*.tsv 与用户 commands/ 下的 .tsv 都会加载
+# 偏好设置「命令」页可以勾选
+disabled_categories = []
 
 [model]
 # 本地整句模型：随包的小模型在本机给整句候选重新排序，全程离线；停顿后几十毫秒生效。关掉只用词库统计

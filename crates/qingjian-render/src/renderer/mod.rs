@@ -34,6 +34,12 @@ const CLOUD_SIZE: f32 = 13.0;
 /// 云朵与后面文字的间距（点）。
 const CLOUD_GAP: f32 = 4.0;
 
+/// 命令候选的标记文本（点）。
+const COMMAND_TAG: &str = ">_";
+
+/// 命令标记与后面文字的间距（点）。
+const COMMAND_GAP: f32 = 4.0;
+
 /// preedit 与右侧整句补全之间的间距（点）。
 const SENTENCE_GAP: f32 = 16.0;
 
@@ -247,7 +253,33 @@ impl Renderer {
         m.cloud_width()
     }
 
-    /// 候选词本体：云端词前带云朵、换颜色。
+    /// 命令候选标记占的宽度（含后面的间距）。
+    fn command_width(&mut self, m: &Metrics) -> f32 {
+        let style = m.annotation_style(m.theme.colors.gloss);
+        self.measure(COMMAND_TAG, &style).width + m.px(COMMAND_GAP)
+    }
+
+    /// 画命令标记，返回占用宽度（含间距）。小字与候选词底部对齐。
+    fn draw_command(
+        &mut self,
+        canvas: &mut Canvas,
+        m: &Metrics,
+        x: f32,
+        top: f32,
+        text_height: f32,
+    ) -> f32 {
+        let style = m.annotation_style(m.theme.colors.gloss);
+        self.draw_text(
+            canvas,
+            COMMAND_TAG,
+            &style,
+            x,
+            top + m.small_offset(text_height),
+        );
+        self.command_width(m)
+    }
+
+    /// 候选词本体：云端词前带云朵、命令候选前带命令标记、换颜色。
     fn draw_word(
         &mut self,
         canvas: &mut Canvas,
@@ -260,6 +292,9 @@ impl Renderer {
         let mut word_x = x;
         if row.cloud {
             word_x += self.draw_cloud(canvas, m, word_x, top, text_height);
+        }
+        if row.command {
+            word_x += self.draw_command(canvas, m, word_x, top, text_height);
         }
         let color = if row.cloud {
             m.theme.colors.cloud

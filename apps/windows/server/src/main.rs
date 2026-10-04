@@ -148,6 +148,7 @@ fn main() {
     let glossary = language.zip(glossary_path);
     let bundled_dicts_dir = Some(root.join("data/generated/dicts")).filter(|dir| dir.is_dir());
     let bundled_codes_dir = Some(root.join("data/generated/codes")).filter(|dir| dir.is_dir());
+    let bundled_commands_dir = Some(root.join("assets/commands")).filter(|dir| dir.is_dir());
     let spec = AssemblySpec {
         glossary: glossary.clone(),
         english_glossary: glossary_file(&root, Language::Chinese),
@@ -161,6 +162,8 @@ fn main() {
         dictionaries: config.dictionaries.clone(),
         bundled_codes_dir: bundled_codes_dir.clone(),
         aux_code: config.aux_code.clone(),
+        bundled_commands_dir: bundled_commands_dir.clone(),
+        command: config.command.clone(),
         levels_dir: Some(root.join("assets/levels")),
         user_dir: user_dir(),
         input_log: config.general.input_log,
@@ -204,6 +207,8 @@ fn main() {
                 bundled_codes: bundled_codes_dir,
                 user_dicts: assembly::user_dicts_dir(user.as_deref()),
                 user_codes: assembly::user_codes_dir(user.as_deref()),
+                bundled_commands: bundled_commands_dir,
+                user_commands: assembly::user_commands_dir(user.as_deref()),
             },
         );
     }

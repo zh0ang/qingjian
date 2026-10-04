@@ -1,0 +1,33 @@
+git status	git	查看工作区状态
+git add <file>	git	添加文件到暂存区
+git add -A	git	添加全部变更
+git commit -m '<msg>'	git	提交
+git commit --amend -m '<msg>'	git	修改上次提交
+git push	git	推送提交
+git push -u origin <branch>	git	推送并设置上游
+git pull	git	拉取更新
+git clone <url>	git	克隆仓库
+git clone --depth 1 <url>	git	浅克隆
+git branch	git	列出分支
+git branch <name>	git	创建分支
+git checkout <branch>	git	切换分支
+git checkout -b <name>	git	创建并切换分支
+git switch <branch>	git	切换分支（新语法）
+git merge <branch>	git	合并分支
+git log	git	查看提交历史
+git log --oneline	git	简洁查看提交历史
+git diff	git	查看未暂存改动
+git diff --cached	git	查看暂存改动
+git stash	git	暂存当前改动
+git stash pop	git	恢复暂存
+git stash list	git	查看暂存列表
+git tag <name>	git	打标签
+git remote -v	git	查看远程地址
+git remote add origin <url>	git	添加远程仓库
+git reset --hard HEAD	git	重置到 HEAD
+git reset --soft HEAD~1	git	撤销上次提交保留改动
+git show <commit>	git	查看提交详情
+git rebase <branch>	git	变基
+git fetch	git	拉取远程提交
+git rm <file>	git	删除文件并记录
+git mv <old> <new>	git	重命名文件并记录

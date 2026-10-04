@@ -1,0 +1,36 @@
+adb devices	adb	列出连接的设备
+adb devices -l	adb	列出设备详细型号
+adb shell	adb	进入设备 shell
+adb shell <cmd>	adb	在设备上执行单条命令
+adb push <local> <remote>	adb	推送本地文件到设备
+adb pull <remote> <local>	adb	拉取设备文件到本地
+adb install <apk>	adb	安装 APK
+adb install -r <apk>	adb	覆盖安装 APK
+adb install -g <apk>	adb	安装并授予所有运行时权限
+adb uninstall <pkg>	adb	卸载应用
+adb uninstall -k <pkg>	adb	卸载应用但保留数据
+adb reboot	adb	重启设备
+adb reboot bootloader	adb	重启到 bootloader
+adb reboot recovery	adb	重启到 recovery
+adb reboot fastboot	adb	重启到 fastboot 模式
+adb logcat	adb	查看日志
+adb logcat -c	adb	清空日志缓冲区
+adb logcat -s <tag>	adb	按标签过滤日志
+adb forward tcp:<p> tcp:<p>	adb	端口转发（本地到设备）
+adb reverse tcp:<p> tcp:<p>	adb	反向端口转发（设备到本地）
+adb root	adb	以 root 重启 adb 服务
+adb remount	adb	重新挂载分区为可写（root 后）
+adb sideload <zip>	adb	侧载刷入 OTA 包
+adb sync <dir>	adb	同步文件到设备
+adb shell settings get secure android_id	adb	查看 Android ID
+adb shell pm list packages	adb	列出已安装应用包名
+adb shell pm clear <pkg>	adb	清除应用数据
+adb shell wm size	adb	查看屏幕分辨率
+adb shell dumpsys battery	adb	查看电池状态
+adb shell screencap -p /sdcard/x.png	adb	截屏保存到设备
+adb exec-out screencap -p > x.png	adb	截屏直接输出到本地
+adb kill-server	adb	停止 adb 服务
+adb start-server	adb	启动 adb 服务
+adb connect <ip>:<port>	adb	无线连接设备
+adb disconnect	adb	断开无线连接
+adb pair <ip>:<port>	adb	无线配对设备

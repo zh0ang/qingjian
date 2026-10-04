@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 use qingjian_core::Language;
-use qingjian_platform::{AuxCodeConfig, DictionariesConfig};
+use qingjian_platform::{AuxCodeConfig, CommandConfig, DictionariesConfig};
 
 use super::LanguageModelFiles;
 
@@ -37,6 +37,12 @@ pub struct AssemblySpec {
     /// `[aux_code]` 配置。
     pub aux_code: AuxCodeConfig,
 
+    /// 随包命令库目录（随包根 `assets/commands/`，15 个分类各一个 `.tsv`）。
+    pub bundled_commands_dir: Option<PathBuf>,
+
+    /// `[command]` 配置。
+    pub command: CommandConfig,
+
     /// 词汇等级表目录（`levels-<语言>.tsv`）。
     pub levels_dir: Option<PathBuf>,
 
@@ -60,6 +66,8 @@ impl AssemblySpec {
             dictionaries: DictionariesConfig::default(),
             bundled_codes_dir: None,
             aux_code: AuxCodeConfig::default(),
+            bundled_commands_dir: None,
+            command: CommandConfig::default(),
             levels_dir: None,
             user_dir: None,
             input_log: false,

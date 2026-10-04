@@ -1,0 +1,24 @@
+htop	ops	交互式进程监控
+journalctl -u <service>	ops	查看服务日志
+journalctl -f	ops	实时跟踪日志
+journalctl --since today	ops	查看今日日志
+ufw status	ops	查看防火墙状态
+ufw allow <port>	ops	放行端口
+ufw deny <port>	ops	拒绝端口
+ufw enable	ops	启用防火墙
+ufw disable	ops	禁用防火墙
+iptables -L	ops	列出规则
+iptables -A INPUT -p tcp --dport 22 -j ACCEPT	ops	放行 SSH 端口
+lsof -i	ops	列出网络连接与进程
+lsof -i :<port>	ops	查看端口占用
+lsof <file>	ops	查看占用文件的进程
+vmstat	ops	虚拟内存统计
+vmstat 1 5	ops	每秒采样 5 次
+iostat	ops	IO 统计
+free -m	ops	查看内存使用（MB）
+top	ops	动态查看进程
+kill -9 <pid>	ops	强制结束进程
+ps aux	ops	查看所有进程
+systemctl status <service>	ops	查看服务状态
+systemctl start <service>	ops	启动服务
+systemctl enable <service>	ops	设置服务开机自启

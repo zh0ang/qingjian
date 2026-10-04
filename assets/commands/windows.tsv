@@ -1,0 +1,26 @@
+dir	windows	列出目录内容
+cd <path>	windows	切换目录
+cls	windows	清屏
+copy <src> <dst>	windows	复制文件
+move <src> <dst>	windows	移动文件
+del <file>	windows	删除文件
+ren <old> <new>	windows	重命名文件
+type <file>	windows	查看文件内容
+echo <text>	windows	输出文本
+ipconfig	windows	查看网络配置
+ipconfig /all	windows	查看完整网络配置
+ipconfig /flushdns	windows	刷新 DNS 缓存
+ping <host>	windows	测试网络连通
+netstat -ano	windows	查看网络连接与 PID
+tasklist	windows	列出进程
+taskkill /F /PID <pid>	windows	强制结束进程
+taskkill /F /IM <name>.exe	windows	按名称结束进程
+whoami	windows	查看当前用户
+systeminfo	windows	查看系统信息
+msconfig	windows	打开系统配置
+regedit	windows	打开注册表编辑器
+sfc /scannow	windows	系统文件检查修复
+chkdsk	windows	检查磁盘错误
+shutdown /s /t 0	windows	立即关机
+shutdown /r /t 0	windows	立即重启
+mstsc	windows	远程桌面连接

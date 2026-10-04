@@ -196,16 +196,18 @@ impl Renderer {
             .map(|(i, row)| {
                 let column = i % columns;
                 let cloud = if row.cloud { m.cloud_width() } else { 0.0 };
+                let command = if row.command { self.command_width(m) } else { 0.0 };
+                let extra = cloud + command;
                 let limit = fixed
                     .as_ref()
                     .map_or(em * MAX_CELL_EMS, |widths| widths[column]);
                 // 列宽是按字数估出来的：同样按字数估着放得下的格子不用再实测截断（一屏五十多格，省掉大半次整形）
-                if fixed.is_some() && estimated_ems(&row.text) * em + cloud <= limit {
+                if fixed.is_some() && estimated_ems(&row.text) * em + extra <= limit {
                     return (row.text.clone(), false);
                 }
-                let (text, truncated) = self.truncate(&row.text, &text_style, limit - cloud);
+                let (text, truncated) = self.truncate(&row.text, &text_style, limit - extra);
                 if fixed.is_none() {
-                    let width = self.measure(&text, &text_style).width + cloud;
+                    let width = self.measure(&text, &text_style).width + extra;
                     text_widths[column] = text_widths[column].max(width);
                 }
                 (text, truncated)

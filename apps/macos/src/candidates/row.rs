@@ -68,6 +68,7 @@ impl Row {
             },
             annotation,
             cloud: false,
+            command: false,
         }
     }
 }

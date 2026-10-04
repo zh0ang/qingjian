@@ -515,4 +515,35 @@ impl Engine {
     pub fn learning_language(&self) -> Language {
         self.translator.language()
     }
+
+    /// 装配命令库；不装配就没有命令候选（缺省 `None`）。
+    pub fn with_command_db(mut self, db: CommandDb) -> Self {
+        self.command_db = Some(db);
+        self
+    }
+
+    /// 运行时换命令库（设置页改完 TSV 后热加载用）。命令候选不参与整句格子，
+    /// 不必作废格子缓存。
+    pub fn set_command_db(&mut self, db: CommandDb) {
+        self.command_db = Some(db);
+    }
+
+    pub fn command_db(&self) -> Option<&CommandDb> {
+        self.command_db.as_ref()
+    }
+
+    /// 命令模式状态机，缺省 [`CommandMode::Auto`]（自动识别）。
+    pub fn with_command_mode(mut self, mode: CommandMode) -> Self {
+        self.command_mode = mode;
+        self
+    }
+
+    /// 运行时切换命令模式（快捷键 Ctrl+`）。
+    pub fn set_command_mode(&mut self, mode: CommandMode) {
+        self.command_mode = mode;
+    }
+
+    pub fn command_mode(&self) -> CommandMode {
+        self.command_mode
+    }
 }

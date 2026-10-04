@@ -1,0 +1,18 @@
+edl u	edl	解锁 bootloader（9008 模式）
+edl l	edl	锁定 bootloader
+edl e <partition>	edl	擦除指定分区
+edl w <partition> <file>	edl	写入分区镜像
+edl r <partition> <file>	edl	读取分区到文件
+edl gpt	edl	打印 GPT 分区表
+edl printgpt	edl	打印分区表详情
+edl reset	edl	重置设备（软复位）
+edl qc	edl	Quality Check：检查连接与状态
+edl sw	edl	切换到 fastboot 模式
+edl xml <script.xml>	edl	执行 XML 刷机脚本
+edl qcom	edl	使用 qcom 下载协议连接
+edl sahara	edl	使用 sahara 协议传输
+edl rf <file>	edl	读取全部分区到单个镜像文件
+edl wf <file>	edl	写入全部分区镜像
+edl f <file>	edl	通过 firehose 协议刷入 XML 描述
+edl c <partition>	edl	校验分区哈希
+edl lf	edl	列出可用 loaders

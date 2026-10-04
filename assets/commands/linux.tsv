@@ -1,0 +1,84 @@
+ls	linux	列出当前目录内容
+ls -al	linux	列出全部内容含隐藏文件与详情
+ls -lh	linux	以易读大小列出
+cd <dir>	linux	切换目录
+cd ..	linux	返回上级目录
+cd ~	linux	回到用户主目录
+pwd	linux	显示当前目录绝对路径
+mkdir <dir>	linux	创建目录
+mkdir -p <dir>/<sub>	linux	递归创建多层目录
+cp <src> <dst>	linux	复制文件
+cp -r <src> <dst>	linux	递归复制目录
+rm <file>	linux	删除文件
+rm -rf <dir>	linux	递归强制删除目录
+mv <src> <dst>	linux	移动或重命名
+touch <file>	linux	创建空文件或更新时间戳
+cat <file>	linux	查看文件内容
+cat -n <file>	linux	带行号查看
+more <file>	linux	分页查看
+less <file>	linux	分页查看（支持回翻）
+tail -n 20 <file>	linux	查看文件尾部 20 行
+tail -f <file>	linux	实时跟踪文件
+head -n 10 <file>	linux	查看文件头部 10 行
+echo <text>	linux	输出文本
+echo -e "a\nb"	linux	输出带转义的文本
+ln -s <target> <link>	linux	创建软链接
+ln <target> <link>	linux	创建硬链接
+chmod +x <file>	linux	添加执行权限
+chmod 755 <file>	linux	设置权限为 755
+chmod -R 777 <dir>	linux	递归设置目录权限
+chown <user>:<group> <file>	linux	更改文件所有者
+chown -R <user> <dir>	linux	递归更改目录所有者
+chgrp <group> <file>	linux	更改文件所属组
+find <dir> -name '*.txt'	linux	按文件名查找
+find <dir> -type f -size +100M	linux	按大小查找大文件
+grep -n <pattern> <file>	linux	在文件中查找内容带行号
+grep -r <pattern> <dir>	linux	递归目录查找
+grep -v <pattern> <file>	linux	反向匹配
+apt update	linux	更新软件源索引
+apt install <pkg>	linux	安装软件包
+apt install -y <pkg>	linux	免确认安装软件包
+apt remove <pkg>	linux	卸载软件包
+apt search <keyword>	linux	搜索软件包
+apt show <pkg>	linux	查看软件包详情
+apt upgrade	linux	升级已安装软件包
+apt autoremove	linux	自动清理无用依赖
+systemctl start <svc>	linux	启动服务
+systemctl stop <svc>	linux	停止服务
+systemctl restart <svc>	linux	重启服务
+systemctl enable <svc>	linux	开机自启服务
+systemctl disable <svc>	linux	取消开机自启
+sync	linux	同步内存数据到磁盘
+halt	linux	关闭系统
+poweroff	linux	关机并断电
+reboot	linux	重启系统
+shutdown -h now	linux	立即关机
+shutdown -r now	linux	立即重启
+hostname	linux	查看主机名
+hostnamectl set-hostname <name>	linux	修改主机名
+adduser <user>	linux	添加用户
+passwd <user>	linux	设置用户密码
+su <user>	linux	切换用户
+sudo <cmd>	linux	以 root 权限执行
+userdel <user>	linux	删除用户
+groupadd <group>	linux	新增用户组
+groupdel <group>	linux	删除用户组
+df -h	linux	查看磁盘空间
+du -sh <dir>	linux	统计目录大小
+ps aux	linux	查看全部进程
+ps -ef	linux	查看进程（含父子关系）
+kill -9 <pid>	linux	强制杀死进程
+killall <name>	linux	按名称杀死进程
+top	linux	动态进程监控
+netstat -anp	linux	查看网络连接
+netstat -nlp	linux	查看端口监听
+nc -lk <port>	linux	监听端口
+crontab -e	linux	编辑定时任务
+crontab -l	linux	查看定时任务
+crontab -r	linux	删除所有定时任务
+vi <file>	linux	用 vi 编辑文件
+vim <file>	linux	用 vim 编辑文件
+date	linux	显示当前时间
+date '+%Y-%m-%d %H:%M:%S'	linux	按格式显示时间
+man <cmd>	linux	查看命令手册
+help <cmd>	linux	查看内建命令帮助
